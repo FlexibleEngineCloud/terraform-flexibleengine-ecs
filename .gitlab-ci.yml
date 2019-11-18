@@ -1,0 +1,125 @@
+# Official Template of GitLab-CI file used to Check, Build, Test, Audit and Publish a "Project" Docker image from a Dockerfile.
+# Unless you know what you're doing, you don't need to modify anything on this file except the "Edit Part" and potentially the "test-job"
+# Source URL: https://gitlab.forge.orange-labs.fr/devops-store/gitlab-ci-docker-image-hello-world
+# Try to always use the last version
+# Version : 2.0.0 - 13.04.2018
+# Developed by DevOps Store - devops.store@orange.com
+
+variables:
+
+  ### EDIT PART ###
+
+  # Which version of Docker to use to build your Docker image (full list here : https://hub.docker.com/r/library/docker/)
+  DOCKER_VERSION: "18.03"
+
+  # When testing a Docker Health (test stage), how long (in seconds) wait for the HealthCheck status (https://docs.docker.com/engine/reference/builder/#healthcheck)
+  DOCKER_HEALTHCHECK_TIMEOUT: "60"
+
+  # When Pushing to Artifactory registry (simply uncomment and add the secret variables)
+  # Artifactory is recommanded for shared images or images used in production (because in Artifactory no one can delete or replace a released image)
+  # Use GitLab Secret Variables to safely store Username/Password variables
+  #REGISTRY_USER: $ARTIFACTORY_USERNAME
+  #REGISTRY_PASSWORD: $ARTIFACTORY_PASSWORD
+  #REGISTRY_TEST_URL: dockerfactory-unstable-iva.si.francetelecom.fr
+  #REGISTRY_RELEASE_URL: dockerfactory-iva.si.francetelecom.fr
+  #CONTAINER_TEST_IMAGE: dockerfactory-unstable-iva.si.francetelecom.fr/$CI_PROJECT_PATH:$CI_COMMIT_REF_NAME
+  #CONTAINER_RELEASE_IMAGE: dockerfactory-iva.si.francetelecom.fr/$CI_PROJECT_PATH:$CI_COMMIT_REF_NAME
+
+  # When pushing to Gitlab registry
+  REGISTRY_USER: gitlab-ci-token
+  REGISTRY_PASSWORD: $CI_JOB_TOKEN
+  REGISTRY_TEST_URL: $CI_REGISTRY
+  REGISTRY_RELEASE_URL: $CI_REGISTRY
+  CONTAINER_TEST_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_REF_NAME
+  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_REF_NAME
+
+  # Proxy setting
+  HTTP_PROXY: http://devwatt-proxy.si.fr.intraorange:8080
+  HTTPS_PROXY: http://devwatt-proxy.si.fr.intraorange:8080
+  NO_PROXY: "registry.forge.orange-labs.fr,dockerproxy-iva.si.francetelecom.fr,gitlab.forge.orange-labs.fr,clairaudit.si.fr.intraorange,docker"
+
+  http_proxy: http://devwatt-proxy.si.fr.intraorange:8080
+  https_proxy: http://devwatt-proxy.si.fr.intraorange:8080
+  no_proxy: "registry.forge.orange-labs.fr,dockerproxy-iva.si.francetelecom.fr,gitlab.forge.orange-labs.fr,clairaudit.si.fr.intraorange,docker"
+
+  MOUNT_POINT: /builds/$CI_PROJECT_PATH
+  GIT_SUBMODULE_STRATEGY: recursive
+
+  ### END EDIT PART ###
+
+
+# ==================================================
+# Stages definition
+# ==================================================
+
+stages:
+  # If needed, add your own Stages to compile/test/package your code that will be used in the Image
+  - terraform-init-validate
+  - terraform-fmt
+  - terraform-lint
+
+
+# ==================================================
+# Jobs definition
+# ==================================================
+
+.job_template_docker: &job_definition_docker
+  image: dockerproxy-iva.si.francetelecom.fr/docker:$DOCKER_VERSION
+  services:
+    - name: dockerproxy-iva.si.francetelecom.fr/docker:$DOCKER_VERSION-dind
+      alias: docker
+  tags:
+    - rsc
+    - docker-privileged
+    - shared
+  before_script:
+    - env | grep ^DOCKER_
+    - env | grep ^CI_
+    - docker info
+    - '[ -z "$REGISTRY_PASSWORD" ] && echo "Registry Password is not set or empty (or protected) in Secret Variables" && exit 1'
+    - '[ -z "$REGISTRY_USER" ] && echo "Registry User is not set or empty (or protected) in Secret Variables" && exit 1'
+    - echo $REGISTRY_PASSWORD | docker login $REGISTRY_TEST_URL --username $REGISTRY_USER --password-stdin
+    - echo $REGISTRY_PASSWORD | docker login $REGISTRY_RELEASE_URL --username $REGISTRY_USER --password-stdin
+
+# ==================================================
+# Stage: Terraform init
+# ==================================================
+
+docker-terraform-init-validate:
+  <<: *job_definition_docker
+  stage: terraform-init-validate
+  script:
+    - |
+      docker run -v $MOUNT_POINT:/mnt -e OS_AUTH_URL='test' -e HTTP_PROXY=$HTTP_PROXY -e HTTPS_PROXY=$HTTPS_PROXY \
+      registry.forge.orange-labs.fr/cloudtransfo/cicdtools/docker-terraform:3.10_0.12.12 \
+      /bin/sh -c "cd /mnt && terraform init -input=false -backend=false && terraform validate"
+
+  # when: manual
+
+# ==================================================
+# Stage: Terraform FMT
+# ==================================================
+
+docker-terraform-fmt:
+  <<: *job_definition_docker
+  stage: terraform-fmt
+  script:
+    - |
+      docker run -v $MOUNT_POINT:/mnt -e HTTP_PROXY=$HTTP_PROXY -e HTTPS_PROXY=$HTTPS_PROXY \
+      registry.forge.orange-labs.fr/cloudtransfo/cicdtools/docker-terraform:3.10_0.12.12 \
+      /bin/sh -c "cd /mnt && terraform fmt -write=false"
+  # when: manual
+
+# ==================================================
+# Stage: Terraform lint
+# ==================================================
+
+docker-terraform-lint:
+  <<: *job_definition_docker
+  stage: terraform-lint
+  script:
+    - |
+      docker run -v $MOUNT_POINT:/mnt -e HTTP_PROXY=$HTTP_PROXY -e HTTPS_PROXY=$HTTPS_PROXY \
+      registry.forge.orange-labs.fr/cloudtransfo/cicdtools/docker-tflint:3.10_0.12.1 \
+      /bin/sh -c "cd /mnt && tflint"
+  # when: manual
