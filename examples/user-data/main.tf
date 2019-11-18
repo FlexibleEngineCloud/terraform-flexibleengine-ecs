@@ -5,7 +5,7 @@ module "ecs_user_data" {
   instance_count    = 1
   availability_zone = "eu-west-0a"
 
-  image_id        = "OBS_U_Ubuntu_16.04"
+  image_id        = "0249222b-c9be-419b-a953-f47e91c3fc81"
   flavor_name     = "t2.small"
   key_name        = var.key_pair
   security_groups = var.security_group_id

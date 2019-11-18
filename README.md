@@ -16,7 +16,7 @@ module "ecs_cluster" {
   instance_count = 2
   availability_zone = "eu-west-0a"
 
-  image_id           = "OBS_U_Ubuntu_16.04"
+  image_id           = "0249222b-c9be-419b-a953-f47e91c3fc81"
   flavor_name        = "t2.small"
   key_name           = "my-key"
   security_groups    = ["sg-group-id-1","sg-group-id-2"]
@@ -26,8 +26,8 @@ module "ecs_cluster" {
   attach_eip = false
 
   dns_record  = true
-  domain_id   = "ff808082678a2c9a01690510f1254e6b"
-  domain_name = "cloudtransfo.fe"
+  domain_id   = "my-domain-id"
+  domain_name = "my-domain-name"
 
   metadata = {
     Terraform = "true"
@@ -44,7 +44,7 @@ module "ecs_cluster" {
 ################################
 
 terraform {
-  source = "git::https://gitlab.forge.orange-labs.fr/cloudtransfo/flexibleengine/terraform/modules/terraform-fe-ecs.git?ref=v1.0"
+  source = "git::https://github.com/terraform-flexibleengine-modules/terraform-flexibleengine-ecs.git"
 
 }
 
@@ -60,12 +60,12 @@ inputs = {
     instance_name     = "test"
     instance_count    = 1
 
-    image_id        = "xxxxx-c9be-419b-a953-xxx"
+    image_id        = "<image-id>"
     flavor_name     = "s3.large.2"
-    key_name        = "demo-key"
+    key_name        = "<keypair>"
     security_groups = []
-    subnet_id       = "xx-d2a7-436d-98ad-xxx"
-    network_id      = "xx-49ce-xx-8666-xxx"
+    subnet_id       = "<subnet-id>"
+    network_id      = "<network-id>"
 
     attach_eip = true
 
