@@ -93,7 +93,6 @@ inputs = {
 | dns\_record | Whether or not create a DNS record for these instances | bool | `"false"` | no |
 | domain\_id | ID of the domain if dns_record is set to true | string | `""` | no |
 | domain\_name | Name of the domain if dns_record is set to true | string | `""` | no |
-| endpoint | Endpoint URL of the Flexible Engine provider | string | `"https://iam.eu-west-0.prod-cloud-ocb.orange-business.com/v3"` | no |
 | ext\_net\_name | External network name (do not change) | string | `"admin_external_net"` | no |
 | flavor\_name | The flavor type of instance to start | string | n/a | yes |
 | image\_id | ID of Image to use for the instance | string | n/a | yes |
@@ -103,7 +102,6 @@ inputs = {
 | metadata | A mapping of metadata to assign to the resource | map(string) | `{}` | no |
 | network\_id | The network ID to launch in | string | n/a | yes |
 | record\_ttl | TTL of the A record if dns_record is set to true | number | `"300"` | no |
-| region | Region of the Flexible Engine provider | string | `"eu-west-0"` | no |
 | security\_groups | A list of security group IDs to associate with | list(string) | n/a | yes |
 | subnet\_id | The subnet ID to launch in | string | n/a | yes |
 | sysvol\_size | The size of the system volume in GB | number | `"40"` | no |

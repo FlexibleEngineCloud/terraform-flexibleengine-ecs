@@ -103,17 +103,3 @@ variable "record_ttl" {
   default     = "300"
   type        = number
 }
-
-
-variable "endpoint" {
-  description = "Endpoint URL of the Flexible Engine provider"
-  type        = string
-  default     = "https://iam.eu-west-0.prod-cloud-ocb.orange-business.com/v3"
-}
-
-variable "region" {
-  description = "Region of the Flexible Engine provider"
-  type        = string
-  default     = "eu-west-0"
-}
-
