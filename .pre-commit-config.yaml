@@ -2,4 +2,4 @@
   rev: v1.13.0
   hooks:
     - id: terraform_fmt
-    - id: terraform_docs
+    #- id: terraform_docs

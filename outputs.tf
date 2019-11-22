@@ -1,12 +1,12 @@
 locals {
   this_id = compact(
-    concat(flexibleengine_compute_instance_v2.instance.*.id, [""]),
+    concat(flexibleengine_compute_instance_v2.instances.*.id, [""]),
   )
 }
 
 output "private_ip" {
   description = "List of ipv4 addresses of the created servers"
-  value       = [flexibleengine_compute_instance_v2.instance.*.access_ip_v4]
+  value       = [flexibleengine_compute_instance_v2.instances.*.access_ip_v4]
 }
 
 output "public_ip" {
@@ -21,6 +21,6 @@ output "id" {
 
 output "name" {
   description = "list of names of the created servers"
-  value       = [flexibleengine_compute_instance_v2.instance.*.name]
+  value       = [flexibleengine_compute_instance_v2.instances.*.name]
 }
 

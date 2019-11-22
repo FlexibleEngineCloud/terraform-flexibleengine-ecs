@@ -4,16 +4,7 @@ terraform {
   required_version = ">= 0.12.0"
 }
 
-resource "flexibleengine_blockstorage_volume_v2" "instance_sysvol" {
-  availability_zone = var.availability_zone
-  count             = var.instance_count
-  name              = "${var.instance_count > 1 ? format("%s-%d", var.instance_name, count.index + 1) : var.instance_name}-sysvol"
-  size              = var.sysvol_size
-  image_id          = var.image_id
-  volume_type       = var.sysvol_type
-}
-
-resource "flexibleengine_compute_instance_v2" "instance" {
+resource "flexibleengine_compute_instance_v2" "instances" {
   availability_zone = var.availability_zone
   count             = var.instance_count
   name              = var.instance_count > 1 ? format("%s-%d", var.instance_name, count.index + 1) : var.instance_name
@@ -21,19 +12,24 @@ resource "flexibleengine_compute_instance_v2" "instance" {
   key_pair          = var.key_name
   user_data         = var.user_data
 
-  block_device {
-    uuid                  = flexibleengine_blockstorage_volume_v2.instance_sysvol[count.index].id
-    source_type           = "volume"
-    destination_type      = "volume"
-    volume_size           = flexibleengine_blockstorage_volume_v2.instance_sysvol[count.index].size
-    boot_index            = 0
-    delete_on_termination = true
-  }
-
   network {
     port           = flexibleengine_networking_port_v2.instance_port[count.index].id
     access_network = true
   }
+
+
+  dynamic "block_device" {
+    for_each = var.block_devices
+    content {
+      uuid                  = block_device.value.uuid != "" ? block_device.value.uuid : null
+      source_type           = block_device.value.source_type      # image/volume/snapshot/blank(ephemeral)
+      destination_type      = block_device.value.destination_type # volume/local(epheremal)/blank
+      volume_size           = block_device.value.volume_size
+      boot_index            = block_device.value.boot_index #-1 : local/0: Boot disk/1: Data disk
+      delete_on_termination = block_device.value.delete_on_termination ? block_device.value.delete_on_termination : null
+    }
+  }
+
 
   metadata = merge(
     var.metadata,
@@ -50,8 +46,18 @@ resource "flexibleengine_networking_port_v2" "instance_port" {
   admin_state_up     = "true"
 
   fixed_ip {
-    subnet_id = var.subnet_id
+    subnet_id  = var.subnet_id
+    ip_address = var.ip_address
   }
+
+  dynamic "allowed_address_pairs" {
+    for_each = var.allowed_address_pairs
+    content {
+      ip_address  = allowed_address_pairs.value.ip_address
+      mac_address = allowed_address_pairs.value.mac_address
+    }
+  }
+
 }
 
 resource "flexibleengine_networking_floatingip_v2" "fip" {
@@ -61,7 +67,7 @@ resource "flexibleengine_networking_floatingip_v2" "fip" {
     flexibleengine_networking_port_v2.instance_port.*.id,
     count.index,
   )
-  depends_on = [flexibleengine_compute_instance_v2.instance]
+  depends_on = [flexibleengine_compute_instance_v2.instances]
 }
 
 resource "flexibleengine_dns_recordset_v2" "recordset" {
@@ -71,6 +77,5 @@ resource "flexibleengine_dns_recordset_v2" "recordset" {
   description = "DNS record for instance ${var.instance_count > 1 ? format("%s-%d", var.instance_name, count.index + 1) : var.instance_name}"
   ttl         = var.record_ttl
   type        = "A"
-  records     = [flexibleengine_compute_instance_v2.instance[count.index].access_ip_v4]
+  records     = [flexibleengine_compute_instance_v2.instances[count.index].access_ip_v4]
 }
-

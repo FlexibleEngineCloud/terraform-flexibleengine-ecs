@@ -21,11 +21,6 @@ variable "ext_net_name" {
   type        = string
 }
 
-variable "image_id" {
-  description = "ID of Image to use for the instance"
-  type        = string
-}
-
 variable "flavor_name" {
   description = "The flavor type of instance to start"
   type        = string
@@ -44,18 +39,6 @@ variable "subnet_id" {
 variable "security_groups" {
   description = "A list of security group IDs to associate with"
   type        = list(string)
-}
-
-variable "sysvol_type" {
-  description = "The type of the system volume: SATA for standard I/O or SSD for high I/O"
-  default     = "SATA"
-  type        = string
-}
-
-variable "sysvol_size" {
-  description = "The size of the system volume in GB"
-  default     = "40"
-  type        = number
 }
 
 variable "key_name" {
@@ -103,3 +86,34 @@ variable "record_ttl" {
   default     = "300"
   type        = number
 }
+
+
+variable "block_devices" {
+  description = "List of block devices to attach/create to the ECS instance(s)"
+  type = list(object({
+    uuid                  = string
+    source_type           = string
+    destination_type      = string
+    volume_size           = number
+    boot_index            = number
+    delete_on_termination = bool
+  }))
+}
+
+variable "allowed_address_pairs" {
+  description = "Source/destination check configuration (1.1.1.1/0 for global disable source/destination checks, or list of subnet)"
+  default     = []
+  type = list(object({
+    ip_address  = string
+    mac_address = string
+  }))
+}
+
+variable "ip_address" {
+  description = "Fixed IP Address"
+  default     = null
+  type        = string
+}
+
+
+

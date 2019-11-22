@@ -16,7 +16,6 @@ module "ecs_cluster" {
   instance_count = 2
   availability_zone = "eu-west-0a"
 
-  image_id           = "0249222b-c9be-419b-a953-f47e91c3fc81"
   flavor_name        = "t2.small"
   key_name           = "my-key"
   security_groups    = ["sg-group-id-1","sg-group-id-2"]
@@ -28,6 +27,17 @@ module "ecs_cluster" {
   dns_record  = true
   domain_id   = "my-domain-id"
   domain_name = "my-domain-name"
+
+  block_devices = [
+    {
+      uuid = "<ImageID>"
+      source_type = "image"
+      destination_type = "volume"
+      volume_size = 50
+      boot_index = 0
+      delete_on_termination = true
+    }
+  ]
 
   metadata = {
     Terraform = "true"
@@ -60,7 +70,6 @@ inputs = {
     instance_name     = "test"
     instance_count    = 1
 
-    image_id        = "<image-id>"
     flavor_name     = "s3.large.2"
     key_name        = "<keypair>"
     security_groups = []
@@ -73,6 +82,17 @@ inputs = {
     domain_id   = ""
     domain_name = ""
 
+    block_devices = [
+      {
+        uuid = "<ImageID>"
+        source_type = "image"
+        destination_type = "volume"
+        volume_size = 50
+        boot_index = 0
+        delete_on_termination = true
+      }
+    ]
+
     metadata = {
                   Terraform = "true"
                   Environment = "dev"
@@ -83,7 +103,6 @@ inputs = {
 
 ```
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -95,7 +114,6 @@ inputs = {
 | domain\_name | Name of the domain if dns_record is set to true | string | `""` | no |
 | ext\_net\_name | External network name (do not change) | string | `"admin_external_net"` | no |
 | flavor\_name | The flavor type of instance to start | string | n/a | yes |
-| image\_id | ID of Image to use for the instance | string | n/a | yes |
 | instance\_count | Number of instances to launch | number | `"1"` | no |
 | instance\_name | Name of the ECS instance and the associated volume | string | n/a | yes |
 | key\_name | The key pair name | string | n/a | yes |
@@ -104,9 +122,10 @@ inputs = {
 | record\_ttl | TTL of the A record if dns_record is set to true | number | `"300"` | no |
 | security\_groups | A list of security group IDs to associate with | list(string) | n/a | yes |
 | subnet\_id | The subnet ID to launch in | string | n/a | yes |
-| sysvol\_size | The size of the system volume in GB | number | `"40"` | no |
-| sysvol\_type | The type of the system volume: SATA for standard I/O or SSD for high I/O | string | `"SATA"` | no |
 | user\_data | The user data to provide when launching the instance | string | `""` | no |
+| block\_devices | List of block devices to attach/create to the ECS instance(s) | list(object({ uuid = string source_type = string destination_type = string volume_size = number boot_index = number delete_on_termination = bool })) | n/a | yes |
+| allowed\_address\_pairs | Source/destination check configuration (1.1.1.1/0 for global disable source/destination checks, or list of subnet) | list(object({ ip_address = string mac_address = string })) | `[]` | no |
+| ip\_address | Fixed IP Address| string | null | no |
 
 ## Outputs
 
@@ -116,5 +135,3 @@ inputs = {
 | name | list of names of the created servers |
 | private\_ip | List of ipv4 addresses of the created servers |
 | public\_ip | List of public floating ip addresses of the created servers |
-
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
