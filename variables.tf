@@ -29,11 +29,19 @@ variable "flavor_name" {
 variable "network_id" {
   description = "The network ID to launch in"
   type        = string
+  default     = ""
+}
+
+variable "network_name" {
+  description = "The network ID to launch in"
+  type        = string
+  default     = null
 }
 
 variable "subnet_id" {
   description = "The subnet ID to launch in"
   type        = string
+  default     = ""
 }
 
 variable "security_groups" {

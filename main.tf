@@ -4,6 +4,11 @@ terraform {
   required_version = ">= 0.12.0"
 }
 
+data "flexibleengine_vpc_subnet_v1" "networks" {
+  count = var.network_name != null ? 1 : 0
+  name  = var.network_name
+}
+
 resource "flexibleengine_compute_instance_v2" "instances" {
   availability_zone = var.availability_zone
   count             = var.instance_count
@@ -40,13 +45,13 @@ resource "flexibleengine_compute_instance_v2" "instances" {
 }
 
 resource "flexibleengine_networking_port_v2" "instance_port" {
-  network_id         = var.network_id
+  network_id         = var.network_name != null ? data.flexibleengine_vpc_subnet_v1.networks[0].id : var.network_id
   count              = var.instance_count
   security_group_ids = var.security_groups
   admin_state_up     = "true"
 
   fixed_ip {
-    subnet_id  = var.subnet_id
+    subnet_id  = var.network_name != null ? data.flexibleengine_vpc_subnet_v1.networks[0].subnet_id : var.subnet_id
     ip_address = var.ip_address
   }
 

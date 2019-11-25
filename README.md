@@ -118,10 +118,11 @@ inputs = {
 | instance\_name | Name of the ECS instance and the associated volume | string | n/a | yes |
 | key\_name | The key pair name | string | n/a | yes |
 | metadata | A mapping of metadata to assign to the resource | map(string) | `{}` | no |
-| network\_id | The network ID to launch in | string | n/a | yes |
+| network\_name | The network name to attach (Required if network_id is null) | string | n/a | yes |
+| network\_id | The network ID to launch in (Required if network_name is null) | string | n/a | yes |
 | record\_ttl | TTL of the A record if dns_record is set to true | number | `"300"` | no |
 | security\_groups | A list of security group IDs to associate with | list(string) | n/a | yes |
-| subnet\_id | The subnet ID to launch in | string | n/a | yes |
+| subnet\_id | The subnet ID to launch in (Required if network_name is null) | string | n/a | yes |
 | user\_data | The user data to provide when launching the instance | string | `""` | no |
 | block\_devices | List of block devices to attach/create to the ECS instance(s) | list(object({ uuid = string source_type = string destination_type = string volume_size = number boot_index = number delete_on_termination = bool })) | n/a | yes |
 | allowed\_address\_pairs | Source/destination check configuration (1.1.1.1/0 for global disable source/destination checks, or list of subnet) | list(object({ ip_address = string mac_address = string })) | `[]` | no |
