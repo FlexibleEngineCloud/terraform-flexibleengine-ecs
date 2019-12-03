@@ -36,6 +36,7 @@ module "ecs_cluster" {
       volume_size = 50
       boot_index = 0
       delete_on_termination = true
+      volume_type = "SATA" #SATA/SSD
     }
   ]
 
@@ -90,6 +91,7 @@ inputs = {
         volume_size = 50
         boot_index = 0
         delete_on_termination = true
+        volume_type = "SATA" #SATA/SSD
       }
     ]
 
@@ -124,7 +126,7 @@ inputs = {
 | security\_groups | A list of security group IDs to associate with | list(string) | n/a | yes |
 | subnet\_id | The subnet ID to launch in (Required if network_name is null) | string | n/a | yes |
 | user\_data | The user data to provide when launching the instance | string | `""` | no |
-| block\_devices | List of block devices to attach/create to the ECS instance(s) | list(object({ uuid = string source_type = string destination_type = string volume_size = number boot_index = number delete_on_termination = bool })) | n/a | yes |
+| block\_devices | List of block devices to attach/create to the ECS instance(s) | list(object({ uuid = string source_type = string destination_type = string volume_size = number boot_index = number delete_on_termination = bool volume_type = string })) | n/a | yes |
 | allowed\_address\_pairs | Source/destination check configuration (1.1.1.1/0 for global disable source/destination checks, or list of subnet) | list(object({ ip_address = string mac_address = string })) | `[]` | no |
 | ip\_address | Fixed IP Address| string | null | no |
 
