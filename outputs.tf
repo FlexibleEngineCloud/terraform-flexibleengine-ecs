@@ -14,6 +14,11 @@ output "public_ip" {
   value       = [flexibleengine_networking_floatingip_v2.fip.*.address]
 }
 
+output "neutron_ports_id" {
+  description = "List of neutron ports of the created servers"
+  value       = [flexibleengine_networking_port_v2.instance_port.*.id]
+}
+
 output "id" {
   description = "list of IDs of the created servers"
   value       = [local.this_id]

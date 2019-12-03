@@ -30,6 +30,7 @@ resource "flexibleengine_compute_instance_v2" "instances" {
       source_type           = block_device.value.source_type      # image/volume/snapshot/blank(ephemeral)
       destination_type      = block_device.value.destination_type # volume/local(epheremal)/blank
       volume_size           = block_device.value.volume_size
+      volume_type           = block_device.value.volume_type
       boot_index            = block_device.value.boot_index #-1 : local/0: Boot disk/1: Data disk
       delete_on_termination = block_device.value.delete_on_termination ? block_device.value.delete_on_termination : null
     }

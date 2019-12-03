@@ -103,6 +103,7 @@ variable "block_devices" {
     source_type           = string
     destination_type      = string
     volume_size           = number
+    volume_type           = string
     boot_index            = number
     delete_on_termination = bool
   }))
