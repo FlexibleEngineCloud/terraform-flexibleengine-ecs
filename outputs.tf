@@ -1,9 +1,3 @@
-locals {
-  this_id = compact(
-    concat(flexibleengine_compute_instance_v2.instances.*.id, [""]),
-  )
-}
-
 output "private_ip" {
   description = "List of ipv4 addresses of the created servers"
   value       = flexibleengine_compute_instance_v2.instances.*.access_ip_v4
@@ -21,7 +15,7 @@ output "neutron_ports_id" {
 
 output "id" {
   description = "list of IDs of the created servers"
-  value       = local.this_id
+  value = flexibleengine_compute_instance_v2.instances.*.id
 }
 
 output "name" {
