@@ -22,7 +22,7 @@ module "ecs_cluster" {
   subnet_id          = "my-subnet-id"
   network_id         = "my-network-id"
 
-  attach_eip = false
+  new_eip = false
 
   dns_record  = true
   domain_id   = "my-domain-id"
@@ -77,7 +77,7 @@ inputs = {
     subnet_id       = "<subnet-id>"
     network_id      = "<network-id>"
 
-    attach_eip = true
+    new_eip = true
 
     dns_record  = false
     domain_id   = ""

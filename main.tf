@@ -76,9 +76,9 @@ resource "flexibleengine_vpc_eip_v1" "new_eip" {
     )
   }
   bandwidth {
-    name = var.instance_count > 1 ? format("%s-%d", "bandwidth-${var.instance_name}", count.index + 1) : "bandwidth-${var.instance_name}"
-    size = var.eip_bandwidth
-    share_type = "PER"
+    name        = var.instance_count > 1 ? format("%s-%d", "bandwidth-${var.instance_name}", count.index + 1) : "bandwidth-${var.instance_name}"
+    size        = var.eip_bandwidth
+    share_type  = "PER"
     charge_mode = "traffic"
   }
   depends_on = [flexibleengine_compute_instance_v2.instances]

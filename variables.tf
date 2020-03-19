@@ -17,7 +17,7 @@ variable "new_eip" {
 
 variable "eip_bandwidth" {
   description = "Bandwidth of the EIP in Mbit/s"
-  default = null
+  default     = null
   type        = number
 }
 
