@@ -108,27 +108,29 @@ inputs = {
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| attach\_eip | Whether or not attache elastic IP (public IP) | bool | `"false"` | no |
-| availability\_zone | The availability zone to launch where | string | n/a | yes |
-| dns\_record | Whether or not create a DNS record for these instances | bool | `"false"` | no |
-| domain\_id | ID of the domain if dns_record is set to true | string | `""` | no |
-| domain\_name | Name of the domain if dns_record is set to true | string | `""` | no |
-| ext\_net\_name | External network name (do not change) | string | `"admin_external_net"` | no |
-| flavor\_name | The flavor type of instance to start | string | n/a | yes |
-| instance\_count | Number of instances to launch | number | `"1"` | no |
-| instance\_name | Name of the ECS instance and the associated volume | string | n/a | yes |
-| key\_name | The key pair name | string | n/a | yes |
-| metadata | A mapping of metadata to assign to the resource | map(string) | `{}` | no |
-| network\_name | The network name to attach (Required if network_id is null) | string | n/a | yes |
-| network\_id | The network ID to launch in (Required if network_name is null) | string | n/a | yes |
-| record\_ttl | TTL of the A record if dns_record is set to true | number | `"300"` | no |
-| security\_groups | A list of security group IDs to associate with | list(string) | n/a | yes |
-| subnet\_id | The subnet ID to launch in (Required if network_name is null) | string | n/a | yes |
-| user\_data | The user data to provide when launching the instance | string | `""` | no |
-| block\_devices | List of block devices to attach/create to the ECS instance(s) | list(object({ uuid = string source_type = string destination_type = string volume_size = number boot_index = number delete_on_termination = bool volume_type = string })) | n/a | yes |
-| allowed\_address\_pairs | Source/destination check configuration (1.1.1.1/0 for global disable source/destination checks, or list of subnet) | list(object({ ip_address = string mac_address = string })) | `[]` | no |
-| ip\_address | Fixed IP Address| string | null | no |
+|------|-------------|------|---------|:-----:|
+| allowed\_address\_pairs | Source/destination check configuration (1.1.1.1/0 for global disable source/destination checks, or list of subnet) | <pre>list(object({<br>    ip_address  = string<br>    mac_address = string<br>  }))</pre> | `[]` | no |
+| availability\_zone | The availability zone to launch where | `string` | n/a | yes |
+| block\_devices | List of block devices to attach/create to the ECS instance(s) | <pre>list(object({<br>    uuid                  = string<br>    source_type           = string<br>    destination_type      = string<br>    volume_size           = number<br>    volume_type           = string<br>    boot_index            = number<br>    delete_on_termination = bool<br>  }))</pre> | n/a | yes |
+| dns\_record | Whether or not create a DNS record for these instances | `bool` | `false` | no |
+| domain\_id | ID of the domain if dns\_record is set to true | `string` | `""` | no |
+| domain\_name | Name of the domain if dns\_record is set to true | `string` | `""` | no |
+| eip\_bandwidth | Bandwidth of the EIP in Mbit/s | `number` | n/a | yes |
+| existing\_eip | Existing IPs (public IPs) to be attached to ECS | `list` | `[]` | no |
+| ext\_net\_name | External network name (do not change) | `string` | `"admin_external_net"` | no |
+| flavor\_name | The flavor type of instance to start | `string` | n/a | yes |
+| instance\_count | Number of instances to launch | `number` | `1` | no |
+| instance\_name | Name of the ECS instance and the associated volume | `string` | n/a | yes |
+| ip\_address | Fixed IP Address | `string` | n/a | yes |
+| key\_name | The key pair name | `string` | n/a | yes |
+| metadata | A mapping of metadata to assign to the resource | `map(string)` | `{}` | no |
+| network\_id | The network ID to launch in | `string` | `""` | no |
+| network\_name | The network ID to launch in | `string` | n/a | yes |
+| new\_eip | Whether or not attach new Elastic IP (public IP) to ECS | `bool` | `false` | no |
+| record\_ttl | TTL of the A record if dns\_record is set to true | `number` | `"300"` | no |
+| security\_groups | A list of security group IDs to associate with | `list(string)` | n/a | yes |
+| subnet\_id | The subnet ID to launch in | `string` | `""` | no |
+| user\_data | The user data to provide when launching the instance | `string` | `""` | no |
 
 ## Outputs
 
@@ -136,5 +138,6 @@ inputs = {
 |------|-------------|
 | id | list of IDs of the created servers |
 | name | list of names of the created servers |
+| neutron\_ports\_id | List of neutron ports of the created servers |
 | private\_ip | List of ipv4 addresses of the created servers |
 | public\_ip | List of public floating ip addresses of the created servers |
