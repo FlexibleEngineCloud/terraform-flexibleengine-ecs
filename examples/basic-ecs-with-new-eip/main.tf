@@ -11,7 +11,7 @@ module "basic_ecs" {
   subnet_id       = var.subnet_id
   network_id      = var.network_id
 
-  new_eip = true
+  new_eip       = true
   eip_bandwidth = var.eip_bandwidth
 
   block_devices = [
