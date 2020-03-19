@@ -9,10 +9,22 @@ variable "instance_count" {
   type        = number
 }
 
-variable "attach_eip" {
-  description = "Whether or not attache elastic IP (public IP)"
+variable "new_eip" {
+  description = "Whether or not attach new Elastic IP (public IP) to ECS"
   default     = false
   type        = bool
+}
+
+variable "eip_bandwidth" {
+  description = "Bandwidth of the EIP in Mbit/s"
+  default = null
+  type        = number
+}
+
+variable "existing_eip" {
+  description = "Existing IPs (public IPs) to be attached to ECS"
+  default     = []
+  type        = list
 }
 
 variable "ext_net_name" {

@@ -5,7 +5,7 @@ output "private_ip" {
 
 output "public_ip" {
   description = "List of public floating ip addresses of the created servers"
-  value       = flexibleengine_networking_floatingip_v2.fip.*.address
+  value       = var.new_eip == true ? [for publicip in flexibleengine_vpc_eip_v1.new_eip.*.publicip: lookup(element(publicip, 0), "ip_address")] : var.existing_eip
 }
 
 output "neutron_ports_id" {
