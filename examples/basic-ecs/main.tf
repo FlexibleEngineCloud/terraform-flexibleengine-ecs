@@ -11,8 +11,6 @@ module "basic_ecs" {
   subnet_id       = var.subnet_id
   network_id      = var.network_id
 
-  attach_eip = false
-
   block_devices = [
     {
       uuid                  = "<ImageID>"

@@ -13,8 +13,6 @@ module "ecs_user_data" {
 
   user_data = data.template_cloudinit_config.config.rendered
 
-  attach_eip = false
-
   block_devices = [
     {
       uuid                  = "<ImageID>"
