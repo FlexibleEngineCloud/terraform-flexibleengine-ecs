@@ -2,7 +2,7 @@ module "basic_ecs" {
   source = "../../"
 
   instance_name     = "ecs-basic"
-  instance_count    = 1
+  instance_count    = 3
   availability_zone = "eu-west-0a"
 
   flavor_name     = "t2.small"
@@ -10,6 +10,8 @@ module "basic_ecs" {
   security_groups = var.security_group_id
   subnet_id       = var.subnet_id
   network_id      = var.network_id
+
+  existing_eip = var.existing_eip
 
   block_devices = [
     {

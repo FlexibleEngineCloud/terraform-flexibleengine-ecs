@@ -66,9 +66,31 @@ resource "flexibleengine_networking_port_v2" "instance_port" {
 
 }
 
-resource "flexibleengine_networking_floatingip_v2" "fip" {
-  count = var.attach_eip ? var.instance_count : 0
-  pool  = var.ext_net_name
+resource "flexibleengine_vpc_eip_v1" "new_eip" {
+  count = var.new_eip == true ? var.instance_count : 0
+  publicip {
+    type = "5_bgp"
+    port_id = element(
+      flexibleengine_networking_port_v2.instance_port.*.id,
+      count.index,
+    )
+  }
+  bandwidth {
+    name        = var.instance_count > 1 ? format("%s-%d", "bandwidth-${var.instance_name}", count.index + 1) : "bandwidth-${var.instance_name}"
+    size        = var.eip_bandwidth
+    share_type  = "PER"
+    charge_mode = "traffic"
+  }
+  depends_on = [flexibleengine_compute_instance_v2.instances]
+}
+
+
+resource "flexibleengine_networking_floatingip_associate_v2" "existing_eip" {
+  count = length(var.existing_eip) != 0 ? var.instance_count : 0
+  floating_ip = element(
+    var.existing_eip,
+    count.index,
+  )
   port_id = element(
     flexibleengine_networking_port_v2.instance_port.*.id,
     count.index,
