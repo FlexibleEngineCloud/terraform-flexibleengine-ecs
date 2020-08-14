@@ -1,9 +1,5 @@
 # ECS Instance Module
 
-terraform {
-  required_version = ">= 0.12.0"
-}
-
 data "flexibleengine_vpc_subnet_v1" "networks" {
   count = var.network_name != null ? 1 : 0
   name  = var.network_name
