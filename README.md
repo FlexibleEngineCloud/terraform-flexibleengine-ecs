@@ -4,13 +4,13 @@ Terraform module which creates ECS resource on Flexible Engine
 
 > A DNS record can be created for the created ECS instances. This feature is available only for private zone for now.
 
-## Terraform version 0.12
+## Terraform version 0.13
 
 ## Usage : Terraform
 
 ```hcl
 module "ecs_cluster" {
-  source = "modules/terraform-fe-ecs"
+  source = "FlexibleEngineCloud/ecs/flexibleengine/"
 
   instance_name  = "my-cluster"
   instance_count = 2
