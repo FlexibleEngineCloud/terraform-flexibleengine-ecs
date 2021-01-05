@@ -1,7 +1,8 @@
 resource "flexibleengine_blockstorage_volume_v2" "data_volume" {
-  name        = "data_volume"
-  description = "My Data Volume"
-  size        = 50
+  name              = "data_volume"
+  availability_zone = "eu-west-0a"
+  description       = "My Data Volume"
+  size              = 50
   metadata = {
     __system__encrypted = "1"
     __system__cmkid     = var.kms_id
