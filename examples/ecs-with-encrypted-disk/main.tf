@@ -10,7 +10,8 @@ resource "flexibleengine_blockstorage_volume_v2" "data_volume" {
 }
 
 module "basic_ecs" {
-  source = "../../"
+  source  = "FlexibleEngineCloud/ecs/flexibleengine"
+  version = "2.0.3"
 
   instance_name     = "ecs-encrypt"
   instance_count    = 1
