@@ -18,7 +18,6 @@ resource "flexibleengine_compute_instance_v2" "instances" {
     access_network = true
   }
 
-
   dynamic "block_device" {
     for_each = var.block_devices
     content {
@@ -32,13 +31,24 @@ resource "flexibleengine_compute_instance_v2" "instances" {
     }
   }
 
-
   metadata = merge(
     var.metadata,
     {
       "Name" = var.instance_count > 1 ? format("%s-%d", var.instance_name, count.index + 1) : var.instance_name
     },
   )
+
+  dynamic "scheduler_hints" {
+    for_each = var.scheduler_hints
+    content {
+      group              = scheduler_hints.value.group != "" ? scheduler_hints.value.group : null
+      different_host     = length(scheduler_hints.value.different_host) > 0 ? scheduler_hints.value.different_host : null
+      same_host          = length(scheduler_hints.value.same_host) > 0 ? scheduler_hints.value.same_host : null
+      query              = length(scheduler_hints.value.query) > 0 ? scheduler_hints.value.query : null
+      target_cell        = scheduler_hints.value.target_cell != "" ? scheduler_hints.value.target_cell : null
+      build_near_host_ip = scheduler_hints.value.build_near_host_ip != "" ? scheduler_hints.value.build_near_host_ip : null
+    }
+  }
 }
 
 resource "flexibleengine_networking_port_v2" "instance_port" {
