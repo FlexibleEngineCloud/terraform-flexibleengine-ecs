@@ -11,7 +11,7 @@ module "ecs_user_data" {
   subnet_id       = var.subnet_id
   network_id      = var.network_id
 
-  user_data = data.template_cloudinit_config.config.rendered
+  user_data = "${data.cloudinit_config.config.rendered}"
 
   block_devices = [
     {
