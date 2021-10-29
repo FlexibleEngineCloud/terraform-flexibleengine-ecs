@@ -10,7 +10,7 @@ Terraform module which creates ECS resource on Flexible Engine
 
 ```hcl
 module "ecs_cluster" {
-  source = "FlexibleEngineCloud/ecs/flexibleengine/"
+  source = "FlexibleEngineCloud/ecs/flexibleengine"
 
   instance_name  = "my-cluster"
   instance_count = 2
