@@ -31,4 +31,5 @@ jobs:
           tf_actions_subcommand: 'validate'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OS_AUTH_URL: OS_AUTH_URL='https://iam.eu-west-0.prod-cloud-ocb.orange-business.com/v3'
+          OS_AUTH_URL: whatever
+          OS_REGION_NAME: whatever
