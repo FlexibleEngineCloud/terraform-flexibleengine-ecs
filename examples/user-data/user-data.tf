@@ -1,29 +1,15 @@
-data "template_file" "action_a" {
-  template = file("shell_action_a.sh")
-  vars {
-    action_a = var.action_a
-  }
-}
-
-data "template_file" "action_b" {
-  template = file("shell_action_b.sh")
-  vars {
-    action_b = var.action_b
-  }
-}
-
-data "template_cloudinit_config" "config" {
-  gzip          = true
+data "cloudinit_config" "config" {
+  gzip          = false
   base64_encode = true
 
   part {
     content_type = "text/x-shellscript"
-    content      = data.template_file.action_a.rendered
+    content      = templatefile("shell_action_a.sh", { action_a = var.action_a })
   }
 
   part {
     content_type = "text/x-shellscript"
-    content      = data.template_file.action_b.rendered
+    content      = templatefile("shell_action_b.sh", { action_b = var.action_b })
   }
 
 }
