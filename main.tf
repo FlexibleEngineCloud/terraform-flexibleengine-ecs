@@ -49,6 +49,13 @@ resource "flexibleengine_compute_instance_v2" "instances" {
       build_near_host_ip = scheduler_hints.value.build_near_host_ip != "" ? scheduler_hints.value.build_near_host_ip : null
     }
   }
+
+  tags = merge(
+    var.tags,
+    {
+      "Name" = var.instance_count > 1 ? format("%s-%d", var.instance_name, count.index + 1) : var.instance_name
+    },
+  )
 }
 
 resource "flexibleengine_networking_port_v2" "instance_port" {

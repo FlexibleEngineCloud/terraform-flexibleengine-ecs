@@ -40,6 +40,10 @@ module "ecs_cluster" {
     }
   ]
 
+  tags = {
+    Environment = "dev"
+  }
+
   metadata = {
     Terraform = "true"
     Environment = "dev"
@@ -95,6 +99,10 @@ inputs = {
       }
     ]
 
+    tags = {
+		  Environment = "dev"
+           }
+
     metadata = {
                   Terraform = "true"
                   Environment = "dev"
@@ -130,6 +138,7 @@ inputs = {
 | record\_ttl | TTL of the A record if dns\_record is set to true | `number` | `"300"` | no |
 | security\_groups | A list of security group IDs to associate with | `list(string)` | n/a | yes |
 | subnet\_id | The subnet ID to launch in | `string` | `""` | no |
+| tags | A mapping of tags to assign to the resource | `map(string)` | `{}` | no |
 | user\_data | The user data to provide when launching the instance | `string` | `""` | no |
 
 ## Outputs
