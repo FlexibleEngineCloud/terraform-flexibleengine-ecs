@@ -77,6 +77,11 @@ variable "metadata" {
   type        = map(string)
 }
 
+variable "tags" {
+  description = "A mapping of tags to assign to the resource"
+  default     = {}
+  type        = map(string)
+}
 variable "user_data" {
   description = "The user data to provide when launching the instance"
   default     = ""
