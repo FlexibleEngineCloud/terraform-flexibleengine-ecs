@@ -151,5 +151,7 @@ variable "scheduler_hints" {
     query              = list(string)
     target_cell        = string
     build_near_host_ip = string
+    tenancy            = string
+    dedicated_host_id  = string
   }))
 }

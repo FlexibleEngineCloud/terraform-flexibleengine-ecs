@@ -47,6 +47,8 @@ resource "flexibleengine_compute_instance_v2" "instances" {
       query              = length(scheduler_hints.value.query) > 0 ? scheduler_hints.value.query : null
       target_cell        = scheduler_hints.value.target_cell != "" ? scheduler_hints.value.target_cell : null
       build_near_host_ip = scheduler_hints.value.build_near_host_ip != "" ? scheduler_hints.value.build_near_host_ip : null
+      tenancy            = scheduler_hints.value.tenancy != "" ? scheduler_hints.value.tenancy : null
+      dedicated_host_id  = scheduler_hints.value.dedicated_host_id != "" ? scheduler_hints.value.dedicated_host_id : null
     }
   }
 
