@@ -24,7 +24,7 @@ variable "eip_bandwidth" {
 variable "existing_eip" {
   description = "Existing IPs (public IPs) to be attached to ECS"
   default     = []
-  type        = list
+  type        = list(any)
 }
 
 variable "ext_net_name" {
@@ -145,8 +145,8 @@ variable "scheduler_hints" {
   description = "Provide the Nova scheduler with hints on how the instance should be launched"
   default     = []
   type = list(object({
-    group              = string
-    tenancy            = string
+    group   = string
+    tenancy = string
     deh_id  = string
   }))
 }

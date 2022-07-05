@@ -42,9 +42,9 @@ module "ecs_cluster" {
 
   scheduler_hints = [
     {
-      group = ""
+      group   = ""
       tenancy = "dedicated" #shared/dedicated
-      deh_id = "my-dedicated-host-id"
+      deh_id  = "my-dedicated-host-id"
     }
   ]
 
