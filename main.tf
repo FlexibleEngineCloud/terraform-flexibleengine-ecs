@@ -41,12 +41,9 @@ resource "flexibleengine_compute_instance_v2" "instances" {
   dynamic "scheduler_hints" {
     for_each = var.scheduler_hints
     content {
-      group              = scheduler_hints.value.group != "" ? scheduler_hints.value.group : null
-      different_host     = length(scheduler_hints.value.different_host) > 0 ? scheduler_hints.value.different_host : null
-      same_host          = length(scheduler_hints.value.same_host) > 0 ? scheduler_hints.value.same_host : null
-      query              = length(scheduler_hints.value.query) > 0 ? scheduler_hints.value.query : null
-      target_cell        = scheduler_hints.value.target_cell != "" ? scheduler_hints.value.target_cell : null
-      build_near_host_ip = scheduler_hints.value.build_near_host_ip != "" ? scheduler_hints.value.build_near_host_ip : null
+      group   = scheduler_hints.value.group != "" ? scheduler_hints.value.group : null
+      tenancy = scheduler_hints.value.tenancy != "" ? scheduler_hints.value.tenancy : null
+      deh_id  = scheduler_hints.value.deh_id != "" ? scheduler_hints.value.deh_id : null
     }
   }
 

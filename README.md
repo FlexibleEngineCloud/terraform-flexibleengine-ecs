@@ -40,6 +40,14 @@ module "ecs_cluster" {
     }
   ]
 
+  scheduler_hints = [
+    {
+      group   = ""
+      tenancy = "dedicated" #shared/dedicated
+      deh_id  = "my-dedicated-host-id"
+    }
+  ]
+
   tags = {
     Environment = "dev"
   }
@@ -140,6 +148,7 @@ inputs = {
 | subnet\_id | The subnet ID to launch in | `string` | `""` | no |
 | tags | A mapping of tags to assign to the resource | `map(string)` | `{}` | no |
 | user\_data | The user data to provide when launching the instance | `string` | `""` | no |
+| scheduler\_hints | List of hints on how the instance should be launched | <pre>list(object({<br>   group      = string<br>   tenancy    = string<br>   deh_id     = string<br>   }))</pre> | n/a | yes |
 
 ## Outputs
 
