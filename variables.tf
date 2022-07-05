@@ -146,12 +146,7 @@ variable "scheduler_hints" {
   default     = []
   type = list(object({
     group              = string
-    different_host     = list(string)
-    same_host          = list(string)
-    query              = list(string)
-    target_cell        = string
-    build_near_host_ip = string
     tenancy            = string
-    dedicated_host_id  = string
+    deh_id  = string
   }))
 }
